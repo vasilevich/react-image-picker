@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
 const ImageStyle = (width, height) => {
@@ -15,17 +15,19 @@ export default class Image extends Component {
   }
 
   render() {
-    const { src, isSelected, onImageClick } = this.props
+    const {src, isSelected, onImageClick, CheckedComponent, index, pickedIndex} = this.props;
     return (
       <div className={`responsive${isSelected ? " selected" : ""}`}
-        onClick={onImageClick}>
+           onClick={onImageClick}>
         <img src={src}
-          className={`thumbnail${isSelected ? " selected" : ""}`}
-          style={ImageStyle(150, 150)}
+             className={`thumbnail${isSelected ? " selected" : ""}`}
+             style={ImageStyle(150, 150)}
         />
         <div className="checked">
           {/*<img src={imgCheck} style={{ width: 75, height: 75, objectFit: "cover" }}/>*/}
-          <div className="icon"/>
+          {CheckedComponent ?
+            <CheckedComponent src={src} isSelected={isSelected} index={index} pickedIndex={pickedIndex}/> :
+            <div className="icon"/>}
         </div>
       </div>
     )
@@ -34,5 +36,7 @@ export default class Image extends Component {
 
 Image.propTypes = {
   src: PropTypes.string,
-  isSelected: PropTypes.bool
+  isSelected: PropTypes.bool,
+  pickedIndex: PropTypes.number,
+  index: PropTypes.number
 }
