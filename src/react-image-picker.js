@@ -7,29 +7,39 @@ import Image from './components/image'
 
 class ImagePicker extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+    let picked = OrderedMap();
+    props.images
+      .filter(image => !isNaN(image.pickIndex))
+      .sort(function (image1, image2) {
+        return image1.pickIndex - image2.pickIndex;
+      })
+      .forEach(({src, value}) => (picked = picked.set(value, src)));
     this.state = {
-      picked: OrderedMap()
-    }
-    this.handleImageClick = this.handleImageClick.bind(this)
-    this.renderImage = this.renderImage.bind(this)
+      picked: picked
+    };
+    this.handleImageClick = this.handleImageClick.bind(this);
+    this.renderImage = this.renderImage.bind(this);
   }
 
   handleImageClick(image) {
     const {multiple, onPick} = this.props
-    const pickedImage = multiple ? this.state.picked : OrderedMap()
+    const pickedImage = multiple ? this.state.picked : OrderedMap();
     const newerPickedImage =
       pickedImage.has(image.value) ?
         pickedImage.delete(image.value) :
         pickedImage.set(image.value, image.src)
 
-    this.setState({picked: newerPickedImage})
+    this.setState({picked: newerPickedImage}, () => {
+      const pickedImageToArray = [];
+      newerPickedImage.map((image, i) => pickedImageToArray.push({
+        src: image,
+        value: i,
+        pickIndex: newerPickedImage.toArray().indexOf(image)
+      }));
 
-    const pickedImageToArray = [];
-    newerPickedImage.map((image, i) => pickedImageToArray.push({src: image, value: i}));
-
-    onPick(multiple ? pickedImageToArray : pickedImageToArray[0]);
-
+      onPick(multiple ? pickedImageToArray : pickedImageToArray[0]);
+    });
   }
 
   renderImage(image, i) {
