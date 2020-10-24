@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Map} from 'immutable'
+import {OrderedMap} from 'immutable'
 
 import './index.scss'
 import Image from './components/image'
@@ -9,7 +9,7 @@ class ImagePicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      picked: Map()
+      picked: OrderedMap()
     }
     this.handleImageClick = this.handleImageClick.bind(this)
     this.renderImage = this.renderImage.bind(this)
@@ -17,7 +17,7 @@ class ImagePicker extends Component {
 
   handleImageClick(image) {
     const {multiple, onPick} = this.props
-    const pickedImage = multiple ? this.state.picked : Map()
+    const pickedImage = multiple ? this.state.picked : OrderedMap()
     const newerPickedImage =
       pickedImage.has(image.value) ?
         pickedImage.delete(image.value) :
