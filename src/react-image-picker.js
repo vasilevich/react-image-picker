@@ -8,19 +8,29 @@ import Image from './components/image'
 class ImagePicker extends Component {
   constructor(props) {
     super(props);
-    let picked = OrderedMap();
-    props.images
-      .filter(image => !isNaN(image.pickIndex))
-      .sort(function (image1, image2) {
-        return image1.pickIndex - image2.pickIndex;
-      })
-      .forEach(({src, value}) => (picked = picked.set(value, src)));
     this.state = {
-      picked: picked
+      picked: OrderedMap(),
+      previousImages: [],
     };
     this.handleImageClick = this.handleImageClick.bind(this);
     this.renderImage = this.renderImage.bind(this);
   }
+
+  static getDerivedStateFromProps({images}, {previousImages}) {
+    if (images.length > 0
+      && (previousImages.length == 0 || (
+        previousImages.length !== images.length || previousImages[0].value !== images[0].value))
+    ) {
+      let picked = OrderedMap();
+      images
+        .filter(image => !isNaN(image.pickIndex))
+        .sort((image1, image2) => image1.pickIndex - image2.pickIndex)
+        .forEach(({src, value}) => (picked = picked.set(value, src)));
+      return {picked, previousImages: images};
+    }
+    return null;
+  }
+
 
   handleImageClick(image) {
     const {multiple, onPick} = this.props
