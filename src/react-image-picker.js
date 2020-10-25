@@ -67,9 +67,9 @@ class ImagePicker extends Component {
   }
 
   render() {
-    const {images} = this.props;
+    const {images, className} = this.props;
     return (
-      <div className="image_picker">
+      <div className={"image_picker"(className ? ' ' + className : "").trim()}>
         {images.map(this.renderImage)}
         <div className="clear"/>
       </div>
